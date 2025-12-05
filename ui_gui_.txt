@@ -1,0 +1,45 @@
+"""
+Einfache GUI-Engine für Touch-basierte Oberfläche
+"""
+
+from utils.colors import Colors
+import gc
+
+class GUIEngine:
+    """Basis GUI-Engine"""
+    
+    def __init__(self, display, touchscreen):
+        self.display = display
+        self.touchscreen = touchscreen
+        self.widgets = []
+        self.active_widget = None
+        
+    def add_widget(self, widget):
+        """Widget hinzufügen"""
+        self.widgets.append(widget)
+        
+    def update(self):
+        """GUI aktualisieren"""
+        # Touch verarbeiten
+        touch = self.touchscreen.get_touch()
+        if touch:
+            event_type, x, y = touch
+            self.handle_touch_event(event_type, x, y)
+            
+    def handle_touch_event(self, event_type, x, y):
+        """Touch-Event verarbeiten"""
+        for widget in self.widgets:
+            if widget.contains(x, y):
+                if event_type == 'touch_down':
+                    widget. on_touch_down(x, y)
+                    self.active_widget = widget
+                elif event_type == 'touch_up':
+                    widget.on_touch_up(x, y)
+                    self.active_widget = None
+                    
+    def draw(self):
+        """Alle Widgets zeichnen"""
+        self.display.clear(Colors.BLACK)
+        for widget in self.widgets:
+            widget.draw(self.display)
+        gc.collect()

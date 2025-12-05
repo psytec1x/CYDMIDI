@@ -1,0 +1,22 @@
+esp32-cyd-midi-sampler/
+├── main.py                      # Haupteintrittspunkt
+├── boot.py                      # Boot-Konfiguration
+├── config.py                    # Konfigurationsdatei
+├── drivers/
+│   ├── display. py              # ILI9341 Display-Treiber
+│   ├── touchscreen.py          # Touchscreen-Eingabe
+│   └── sdcard.py               # SD-Karte
+├── midi/
+│   ├── midi_manager.py         # MIDI-Erkennung & Kommunikation
+│   └── circuit_tracks.py       # Circuit Tracks spezifische SysEx
+├── ui/
+│   ├── gui.py                  # Basis-GUI-Engine
+│   ├── widgets. py              # UI-Widgets (Buttons, Slots, etc.)
+│   └── file_browser.py         # Dateibrowser
+├── sampling/
+│   ├── sample_manager.py       # Sample-Verwaltung
+│   └── waveform_preview.py     # Wellenform-Vorschau
+├── utils/
+│   ├── logger.py               # Logging-Utilities
+│   └── colors.py               # Farbdefinitionen
+└── README.md                    # Dokumentation

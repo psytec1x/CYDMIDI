@@ -1,0 +1,26 @@
+"""
+ESP32 CYD - Boot-Skript
+Wird automatisch beim Start ausgeführt
+"""
+
+import gc
+import machine
+
+# Garbage Collection aktivieren
+gc.enable()
+gc.collect()
+
+print("=" * 50)
+print("ESP32 CYD MIDI Sampler - Boot")
+print("=" * 50)
+
+# Watchdog (optional)
+# wdt = machine.WDT()
+# wdt.feed()
+
+# ESP32 Informationen
+print(f"MicroPython: {machine.MicroPython}")
+print(f"Plattform: {machine.platform()}")
+print(f"Speicher frei: {gc.mem_free()} Bytes")
+
+print("\nStarte main.py...")

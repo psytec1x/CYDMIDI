@@ -1,0 +1,116 @@
+"""
+Basis-Widgets für die Sampler-UI
+"""
+
+from utils.colors import Colors
+
+class Widget:
+    """Basis-Widget-Klasse"""
+    
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self. pressed = False
+        
+    def contains(self, x, y):
+        """Prüfe, ob Punkt im Widget liegt"""
+        return (self.x <= x < self.x + self.width and
+                self.y <= y < self.y + self.height)
+                
+    def on_touch_down(self, x, y):
+        """Touch Down Handler"""
+        self.pressed = True
+        
+    def on_touch_up(self, x, y):
+        """Touch Up Handler"""
+        self.pressed = False
+        
+    def draw(self, display):
+        """Widget zeichnen"""
+        pass
+
+
+class Button(Widget):
+    """Druckbutton"""
+    
+    def __init__(self, x, y, width, height, label, callback=None):
+        super().__init__(x, y, width, height)
+        self.label = label
+        self.callback = callback
+        self.color = Colors.BLUE
+        
+    def on_touch_up(self, x, y):
+        super().on_touch_up(x, y)
+        if self. callback:
+            self.callback()
+            
+    def draw(self, display):
+        color = Colors. DARKBLUE if self.pressed else self.color
+        display.fill_rect(self.x, self. y, self.width, self. height, color)
+        # Text-Rendering würde hier folgen
+
+
+class SampleSlot(Widget):
+    """Sample-Slot für Drag & Drop"""
+    
+    def __init__(self, x, y, slot_number):
+        super().__init__(x, y, 38, 28)
+        self.slot_number = slot_number
+        self. sample_name = None
+        self.sample_data = None
+        self.color = Colors.DARKGRAY
+        
+    def set_sample(self, sample_name, sample_data):
+        """Sample setzen"""
+        self.sample_name = sample_name
+        self.sample_data = sample_data
+        self.color = Colors.GREEN
+        
+    def clear_sample(self):
+        """Sample löschen"""
+        self.sample_name = None
+        self. sample_data = None
+        self.color = Colors.DARKGRAY
+        
+    def draw(self, display):
+        # Slot-Rahmen
+        border_color = Colors.YELLOW if self.pressed else Colors.WHITE
+        display.fill_rect(self.x, self.y, self.width, self.height, self.color)
+        # Rahmen würde hier gezeichnet
+
+
+class FileBrowser(Widget):
+    """Dateibrowser Widget"""
+    
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.files = []
+        self.selected_index = 0
+        self.scroll_offset = 0
+        self.items_visible = 8
+        
+    def set_files(self, files):
+        """Dateiliste setzen"""
+        self. files = files
+        self.selected_index = 0
+        
+    def on_touch_down(self, x, y):
+        """Touch im Browser"""
+        super().on_touch_down(x, y)
+        # Berechne, welche Datei angeklickt wurde
+        item_height = self.height // self.items_visible
+        relative_y = y - self.y
+        item_index = relative_y // item_height
+        self.selected_index = self.scroll_offset + item_index
+        
+    def get_selected_file(self):
+        """Ausgewählte Datei abrufen"""
+        if 0 <= self.selected_index < len(self.files):
+            return self.files[self.selected_index]
+        return None
+        
+    def draw(self, display):
+        # Browser-Hintergrund
+        display.fill_rect(self.x, self. y, self.width, self. height, Colors.BLACK)
